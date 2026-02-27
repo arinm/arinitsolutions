@@ -24,7 +24,7 @@ export function Parallax({ children, speed = 0.3, className }: ParallaxProps) {
   }
 
   return (
-    <div ref={ref} className={`overflow-hidden ${className || ""}`}>
+    <div ref={ref} className={`relative overflow-hidden ${className || ""}`}>
       <motion.div style={{ y }}>{children}</motion.div>
     </div>
   );

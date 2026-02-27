@@ -27,7 +27,7 @@ export function ScrollTextReveal({ text, className = "" }: ScrollTextRevealProps
   }
 
   return (
-    <p ref={ref} className={`flex flex-wrap ${className}`}>
+    <p ref={ref} className={`relative flex flex-wrap ${className}`}>
       {words.map((word, i) => {
         const start = i / words.length;
         const end = start + 1 / words.length;

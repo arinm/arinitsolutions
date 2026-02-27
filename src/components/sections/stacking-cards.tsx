@@ -123,7 +123,7 @@ export function StackingCards() {
           </p>
         </FadeIn>
 
-        <div className="mt-16">
+        <div className="relative mt-16">
           {cards.map((card, i) => (
             <StackingCard
               key={card.title}

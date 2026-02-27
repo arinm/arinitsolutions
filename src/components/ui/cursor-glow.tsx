@@ -1,38 +1,38 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 
 export function CursorGlow() {
   const reduced = useReducedMotion();
-  const [pos, setPos] = useState({ x: -200, y: -200 });
-  const [visible, setVisible] = useState(false);
+  const elRef = useRef<HTMLDivElement>(null);
   const raf = useRef<number>(0);
   const mouse = useRef({ x: -200, y: -200 });
+  const pos = useRef({ x: -200, y: -200 });
 
   useEffect(() => {
     if (reduced) return;
-    // Hide on touch devices
     const mq = window.matchMedia("(pointer: fine)");
     if (!mq.matches) return;
 
+    const el = elRef.current;
+    if (!el) return;
+
     const onMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
-      if (!visible) setVisible(true);
+      el.style.opacity = "1";
     };
-    const onLeave = () => setVisible(false);
-    const onEnter = () => setVisible(true);
+    const onLeave = () => { el.style.opacity = "0"; };
+    const onEnter = () => { el.style.opacity = "1"; };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
 
-    // Smooth follow with RAF
     const tick = () => {
-      setPos((prev) => ({
-        x: prev.x + (mouse.current.x - prev.x) * 0.15,
-        y: prev.y + (mouse.current.y - prev.y) * 0.15,
-      }));
+      pos.current.x += (mouse.current.x - pos.current.x) * 0.15;
+      pos.current.y += (mouse.current.y - pos.current.y) * 0.15;
+      el.style.transform = `translate3d(${pos.current.x - 200}px, ${pos.current.y - 200}px, 0)`;
       raf.current = requestAnimationFrame(tick);
     };
     raf.current = requestAnimationFrame(tick);
@@ -43,21 +43,21 @@ export function CursorGlow() {
       document.removeEventListener("mouseenter", onEnter);
       cancelAnimationFrame(raf.current);
     };
-  }, [reduced, visible]);
+  }, [reduced]);
 
   if (reduced) return null;
 
   return (
-    <motion.div
-      className="pointer-events-none fixed z-[9998] hidden lg:block"
+    <div
+      ref={elRef}
+      className="pointer-events-none fixed top-0 left-0 z-[9998] hidden lg:block"
       style={{
-        left: pos.x - 200,
-        top: pos.y - 200,
         width: 400,
         height: 400,
+        opacity: 0,
+        transition: "opacity 0.3s",
+        willChange: "transform",
       }}
-      animate={{ opacity: visible ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
       aria-hidden="true"
     >
       <div
@@ -67,6 +67,6 @@ export function CursorGlow() {
             "radial-gradient(circle, rgba(139,92,246,0.07) 0%, rgba(59,130,246,0.03) 40%, transparent 70%)",
         }}
       />
-    </motion.div>
+    </div>
   );
 }
