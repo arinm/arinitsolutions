@@ -1,0 +1,76 @@
+---
+title: "Cloud Cost Optimization"
+client: "Energy & IoT"
+excerpt: "Reduced AWS spend from €47,000/mo to €18,500/mo — a 61% reduction saving €342,000 annually, with zero performance impact."
+discipline: "cloud"
+tags: ["AWS", "Terraform", "Kubernetes", "Datadog", "FinOps"]
+featured: true
+metrics:
+  - value: "€18.5k/mo"
+    label: "Monthly spend"
+    context: "Down from €47k/mo"
+  - value: "-61%"
+    label: "Cost reduction"
+    context: "€342k annual saving"
+  - value: "7 weeks"
+    label: "Delivery time"
+    context: "Audit + optimization"
+  - value: "99.99%"
+    label: "Uptime maintained"
+    context: "Zero SLA impact"
+stack:
+  - category: "Cloud"
+    technologies: ["AWS ECS Fargate", "RDS", "S3", "CloudFront", "Cost Explorer"]
+  - category: "Tooling"
+    technologies: ["Terraform", "GitHub Actions", "Datadog"]
+timeline:
+  - label: "Infrastructure Audit"
+    duration: "Week 1"
+    description: "Mapped every AWS resource, tagged untagged resources, identified waste."
+  - label: "Cost Attribution"
+    duration: "Week 2"
+    description: "Built per-team cost dashboards with AWS Cost Explorer + Datadog."
+  - label: "Optimization Sprint 1"
+    duration: "Week 3-4"
+    description: "Migrated stateless workloads to Fargate, implemented S3 tiering."
+  - label: "Optimization Sprint 2"
+    duration: "Week 5-6"
+    description: "Reserved Instances for baseline, cleaned unused resources."
+  - label: "Validation"
+    duration: "Week 7"
+    description: "Verified SLA compliance, documented new baseline."
+learnings:
+  - title: "Cost attribution dashboards were the highest-value deliverable"
+    body: "Once teams could see their own spend, they immediately started self-correcting wasteful resource usage. Culture change happened faster than expected."
+  - title: "S3 Intelligent Tiering alone saved €4,200/month"
+    body: "Zero code changes, zero performance impact. For 4TB of sensor data, this was the easiest win in the entire engagement."
+---
+
+## The challenge
+
+The client's AWS bill had grown to €47,000/month — roughly 3× what it should have been for their workload. Over-provisioned EC2 instances, unused RDS replicas, unoptimized S3 lifecycle policies, and no cost attribution per service. Their CTO knew they were overspending but had no clear picture of where or how to fix it.
+
+The hard constraint: The client processes real-time sensor data from 10,000+ IoT devices. Latency spikes would directly impact their SLA with enterprise customers. Any optimization had to be performance-neutral.
+
+## Our approach
+
+We started with a one-week infrastructure audit: mapped every AWS resource, tagged untagged resources (we found 34% of resources had no cost allocation tags), and identified unused and over-provisioned instances.
+
+The next step was building visibility. We created a cost attribution model using AWS Cost Explorer combined with custom Datadog dashboards, broken down by team and service. Then we executed a phased optimization plan over six weeks.
+
+Key technical decisions:
+
+- **Migrated stateless workloads from EC2 to ECS Fargate** — right-sizing plus scale-to-zero during off-peak
+- **Implemented S3 Intelligent Tiering** for 4TB of sensor data
+- **Chose NOT to move to Kubernetes** — their workload didn't justify the operational complexity
+- **Reserved Instances** for predictable baseline (RDS, core ECS services)
+
+## What we built
+
+A leaner, fully observed infrastructure with clear cost ownership:
+
+- Per-team cost dashboards with weekly automated reports
+- Terraform-managed infrastructure with cost-aware resource sizing
+- S3 lifecycle policies reducing storage costs by 40%
+- Autoscaling policies tuned to actual traffic patterns
+- Comprehensive runbook for ongoing FinOps practices

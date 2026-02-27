@@ -1,0 +1,81 @@
+---
+title: "Real-Time Logistics Platform"
+client: "Logistics"
+excerpt: "Built a real-time fleet management platform with live GPS tracking, route optimization, and driver mobile app. 2,000+ vehicles monitored daily."
+discipline: "web"
+tags: ["React", "Node.js", "WebSocket", "PostgreSQL", "Redis", "React Native"]
+featured: true
+metrics:
+  - value: "2,000+"
+    label: "Vehicles tracked"
+    context: "Real-time GPS"
+  - value: "-22%"
+    label: "Fuel costs"
+    context: "Route optimization"
+  - value: "< 500ms"
+    label: "Position latency"
+    context: "GPS to dashboard"
+  - value: "14 weeks"
+    label: "Full platform"
+    context: "Web + mobile + API"
+stack:
+  - category: "Frontend"
+    technologies: ["React", "TypeScript", "Mapbox GL", "TanStack Query", "Tailwind CSS"]
+  - category: "Mobile"
+    technologies: ["React Native", "Expo", "Background Location"]
+  - category: "Backend"
+    technologies: ["Node.js", "Fastify", "PostgreSQL", "PostGIS", "Redis Pub/Sub", "WebSocket"]
+  - category: "Infrastructure"
+    technologies: ["AWS ECS", "ElastiCache", "RDS", "CloudWatch", "GitHub Actions"]
+timeline:
+  - label: "Discovery"
+    duration: "Week 1-2"
+    description: "Mapped dispatch workflows, GPS data requirements, driver needs."
+  - label: "API & Data Layer"
+    duration: "Week 3-5"
+    description: "PostGIS schema, real-time ingestion pipeline, WebSocket server."
+  - label: "Web Dashboard"
+    duration: "Week 6-9"
+    description: "Live map, fleet overview, route planning, analytics dashboards."
+  - label: "Driver App"
+    duration: "Week 10-12"
+    description: "React Native app with background GPS, delivery confirmations, offline mode."
+  - label: "Launch & Scale"
+    duration: "Week 13-14"
+    description: "Load testing at 5,000 concurrent connections, phased rollout."
+learnings:
+  - title: "PostGIS spatial queries were 40x faster than application-level filtering"
+    body: "Initial prototype filtered vehicle positions in Node.js. Switching to PostGIS ST_DWithin queries for geofencing reduced response time from 800ms to 20ms for 2,000 vehicles."
+  - title: "Redis Pub/Sub was the right choice over Kafka"
+    body: "At 2,000 vehicles sending positions every 5 seconds, Redis Pub/Sub handled the throughput easily. Kafka would have added operational complexity we didn't need yet."
+---
+
+## The challenge
+
+The client manages a fleet of 2,000+ delivery vehicles across Romania. Their dispatchers were using spreadsheets and phone calls to coordinate routes — no real-time visibility, no route optimization, and drivers had no mobile tools. Fuel costs were 22% above industry benchmark due to suboptimal routing.
+
+They needed a complete platform: a web dashboard for dispatchers, a mobile app for drivers, and a real-time data pipeline connecting everything.
+
+## Our approach
+
+We designed a three-layer architecture: a real-time ingestion pipeline (GPS data from drivers → Redis Pub/Sub → WebSocket to dashboard), a PostGIS-powered spatial database for geofencing and route queries, and client apps optimized for their specific use cases.
+
+The driver app needed to work with spotty cellular coverage on rural routes, so we built it offline-first with background GPS tracking that queues position updates and syncs when connectivity returns.
+
+Key technical decisions:
+
+- **PostGIS** for spatial queries instead of application-level geo filtering
+- **Redis Pub/Sub** for real-time position broadcasting (not Kafka — right tool for current scale)
+- **Mapbox GL** for smooth map rendering with 2,000+ moving markers
+- **Chose NOT to build route optimization in-house** — integrated Google Routes API with custom constraints
+
+## What we built
+
+A full logistics platform used by 200+ dispatchers and 2,000+ drivers daily:
+
+- Real-time fleet map with sub-500ms position updates
+- Geofence alerts for delivery zones, restricted areas, and route deviations
+- Automated route optimization reducing fuel costs by 22%
+- Driver mobile app with offline GPS tracking and delivery confirmation
+- Analytics dashboards: fuel consumption, delivery times, driver performance
+- Webhook integrations with their existing ERP and invoicing systems

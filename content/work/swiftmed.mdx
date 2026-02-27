@@ -1,0 +1,80 @@
+---
+title: "Cross-Platform Health App"
+client: "HealthTech"
+excerpt: "Built a React Native + Expo health tracking app from zero to App Store + Play Store in 10 weeks. 50k downloads in the first quarter."
+discipline: "mobile"
+tags: ["React Native", "Expo", "TypeScript", "Node.js", "PostgreSQL"]
+featured: true
+metrics:
+  - value: "50k"
+    label: "Downloads in Q1"
+    context: "From zero"
+  - value: "4.8★"
+    label: "App Store rating"
+    context: "After 3 months"
+  - value: "10 weeks"
+    label: "Zero to stores"
+    context: "Including review"
+  - value: "< 200ms"
+    label: "Screen transition"
+    context: "P95 cold start"
+stack:
+  - category: "Mobile"
+    technologies: ["React Native", "Expo SDK 51", "TypeScript", "React Navigation", "Reanimated 3"]
+  - category: "Backend"
+    technologies: ["Node.js", "Fastify", "PostgreSQL", "Redis", "Zod"]
+  - category: "Infrastructure"
+    technologies: ["AWS ECS", "RDS", "S3", "EAS Build", "GitHub Actions"]
+timeline:
+  - label: "Discovery & Design"
+    duration: "Week 1-2"
+    description: "User research, wireframes, design system. Defined offline-first architecture."
+  - label: "Core Build"
+    duration: "Week 3-7"
+    description: "Auth, health tracking, appointment booking, push notifications, offline sync."
+  - label: "Polish & QA"
+    duration: "Week 8-9"
+    description: "Performance tuning, accessibility audit, device farm testing on 40+ devices."
+  - label: "Launch"
+    duration: "Week 10"
+    description: "App Store + Play Store submission, phased rollout, crash monitoring."
+testimonial:
+  quote: "We went from an idea to 50k users in three months. Their React Native expertise meant we shipped one codebase to both stores without compromising on native feel."
+  author: "Founder"
+  role: "HealthTech Startup"
+learnings:
+  - title: "Expo EAS Build eliminated our biggest bottleneck"
+    body: "Before EAS, mobile CI was a nightmare — different machines for iOS and Android, flaky Xcode versions. EAS Build gave us consistent cloud builds with OTA updates. We shipped hotfixes in minutes instead of waiting for store review."
+  - title: "Offline-first was non-negotiable for health apps"
+    body: "Patients track vitals in areas with spotty connectivity. We used WatermelonDB for local-first sync — the app works fully offline and syncs when connection returns. Zero data loss."
+---
+
+## The challenge
+
+The client needed a patient-facing health tracking app — appointment booking, vitals logging, medication reminders, and secure messaging with providers. They had a tight budget and couldn't afford separate iOS and Android teams, but their users (patients 40-70 years old) demanded native-quality UX with no compromises.
+
+The hard constraints: GDPR-compliant data handling, offline capability for rural patients, and accessibility compliance (WCAG 2.1 AA) — many users have visual impairments.
+
+## Our approach
+
+We chose **React Native with Expo** for maximum code sharing (92% shared) while maintaining native feel. We designed an offline-first architecture using WatermelonDB for local persistence with background sync — the app works fully without internet and queues all changes for sync when connectivity returns.
+
+Performance was a first-class concern. We set budgets: cold start under 2s, screen transitions under 200ms, and JavaScript bundle under 2MB. We enforced these with automated Detox tests running on every PR.
+
+Key technical decisions:
+
+- **Expo SDK 51** with custom native modules for HealthKit/Google Fit integration
+- **Reanimated 3** for 60fps gesture-driven animations
+- **Chose NOT to use a cross-platform UI library** — we built custom components matching iOS and Android platform conventions
+- **WatermelonDB** for offline-first local database with conflict resolution
+
+## What we built
+
+A production health app serving 50k+ patients across iOS and Android:
+
+- Vitals tracking with HealthKit/Google Fit sync and offline support
+- Secure appointment booking with real-time availability
+- Encrypted provider messaging with push notifications
+- Medication reminders with smart scheduling
+- Accessibility-first UI passing WCAG 2.1 AA audit
+- OTA updates via EAS for instant hotfixes

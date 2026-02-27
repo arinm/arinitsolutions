@@ -1,0 +1,80 @@
+---
+title: "E-Commerce Performance Rescue"
+client: "E-Commerce"
+excerpt: "Fixed critical memory leaks and performance bottlenecks in a high-traffic Shopify Plus headless store. Revenue recovered by €180k/month."
+discipline: "web"
+tags: ["Next.js", "GraphQL", "Apollo Client", "Redis", "Shopify"]
+featured: false
+metrics:
+  - value: "0.8s"
+    label: "LCP achieved"
+    context: "Down from 6.1s"
+  - value: "€180k/mo"
+    label: "Revenue recovered"
+    context: "From abandoned sessions"
+  - value: "-94%"
+    label: "Memory usage"
+    context: "Node.js heap"
+  - value: "3 weeks"
+    label: "Time to fix"
+    context: "Audit + remediation"
+stack:
+  - category: "Frontend"
+    technologies: ["Next.js 14", "React 18", "Apollo Client 3", "TypeScript", "Tailwind CSS"]
+  - category: "Backend"
+    technologies: ["Shopify Storefront API (GraphQL)", "Node.js", "Redis", "Cloudflare Workers"]
+  - category: "Tooling"
+    technologies: ["Lighthouse CI", "Datadog APM", "Sentry", "k6 Load Testing"]
+timeline:
+  - label: "Performance Audit"
+    duration: "Week 1"
+    description: "Profiled Node.js heap, traced GraphQL waterfalls, identified 7 critical issues."
+  - label: "Memory Leak Fixes"
+    duration: "Week 2"
+    description: "Fixed Apollo cache leaks, SSR memory accumulation, and event listener cleanup."
+  - label: "Performance Optimization"
+    duration: "Week 3"
+    description: "Implemented query batching, Redis caching layer, image optimization pipeline."
+  - label: "Monitoring"
+    duration: "Ongoing"
+    description: "Set up Datadog APM dashboards, Lighthouse CI gates, and alerting."
+testimonial:
+  quote: "Our site was losing €180k/month from slow page loads and crashes. They found and fixed issues in 3 weeks that our team couldn't diagnose in 6 months."
+  author: "Head of Engineering"
+  role: "E-Commerce Platform"
+learnings:
+  - title: "Apollo Client cache normalization was the root cause"
+    body: "The cache was growing unbounded during SSR — each request accumulated cached entities that were never garbage collected. We switched to a per-request cache instance and memory usage dropped 94%."
+  - title: "GraphQL query batching cut API calls by 70%"
+    body: "The storefront was making 12+ individual Shopify Storefront API calls per page. We consolidated into 3 batched queries with DataLoader, reducing waterfall time from 2.8s to 400ms."
+---
+
+## The challenge
+
+The client's headless Shopify Plus store was hemorrhaging revenue. Page loads hit 6.1 seconds on collection pages, the Node.js server crashed every 4-6 hours from memory leaks, and their Core Web Vitals were deep in the red — Google had demoted their search rankings.
+
+Their in-house team had spent 6 months trying to diagnose the issues. They suspected Apollo Client but couldn't pinpoint the root cause. Meanwhile, analytics showed 34% of users abandoning sessions before the first page finished loading.
+
+## Our approach
+
+We started with a deep performance audit: Node.js heap profiling, Chrome DevTools performance traces, network waterfall analysis, and Apollo Client cache inspection. Within 48 hours, we identified 7 critical issues — 3 memory leaks and 4 performance bottlenecks.
+
+The memory leaks were all related to Apollo Client's cache behavior during server-side rendering. The cache was accumulating normalized entities across requests without cleanup. Each SSR request added to the heap until the process ran out of memory and crashed.
+
+Key technical decisions:
+
+- **Per-request Apollo cache instances** instead of a shared global cache during SSR
+- **Redis caching layer** for Shopify Storefront API responses (5-minute TTL)
+- **Chose NOT to rewrite** — surgical fixes were faster and less risky than a rebuild
+- **Cloudflare Workers** for edge-side image optimization and HTML streaming
+
+## What we built
+
+A stabilized, high-performance storefront with proper observability:
+
+- Zero server crashes (was crashing every 4-6 hours)
+- LCP from 6.1s to 0.8s across all collection and product pages
+- GraphQL query batching reducing API calls by 70%
+- Redis caching layer with intelligent invalidation on Shopify webhooks
+- Datadog APM dashboards with memory, latency, and error rate alerting
+- Lighthouse CI gates preventing performance regressions in PRs

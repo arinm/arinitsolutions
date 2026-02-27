@@ -1,0 +1,72 @@
+---
+title: "Cloud Cost Hygiene: A Monthly Checklist for Teams Burning Cash on AWS"
+excerpt: "Your AWS bill is 40% higher than it needs to be. We know because every audit we run finds the same seven problems. Here's the checklist."
+category: "cloud"
+author:
+  name: "Andrei Radu"
+  role: "Cloud & DevOps Engineer"
+publishedAt: "2026-01-20"
+readingTime: 6
+featured: false
+---
+
+## The problem nobody talks about
+
+Every cloud cost audit we run finds the same thing: companies are spending 30-60% more than they need to on AWS. Not because AWS is expensive, but because nobody is watching.
+
+Cloud costs creep up. A developer spins up an RDS instance for testing and forgets to tear it down. A service gets over-provisioned "just in case" and nobody revisits the sizing. S3 buckets accumulate years of data with no lifecycle policy.
+
+Here's the monthly checklist we use with every client.
+
+## The seven-point monthly checklist
+
+### 1. Review untagged resources
+
+If you can't attribute a resource to a team or service, you can't optimize it. Run a monthly report of untagged resources and assign owners. Target: 100% of resources tagged by team and environment.
+
+### 2. Check for unused resources
+
+Look for:
+- EC2 instances with < 5% average CPU over 30 days
+- Unattached EBS volumes
+- Idle load balancers
+- RDS instances with no connections
+- Unused Elastic IPs (they cost money when idle)
+
+### 3. Right-size your compute
+
+AWS Compute Optimizer gives you free right-sizing recommendations. Review them monthly. We typically find 20-30% over-provisioning on first audit.
+
+### 4. Review S3 storage classes
+
+If you have data older than 30 days that's rarely accessed, it should be in Infrequent Access or Intelligent Tiering. For data older than 90 days, consider Glacier. S3 Intelligent Tiering automates this — enable it.
+
+### 5. Check Reserved Instance coverage
+
+For predictable baseline workloads (databases, core services), Reserved Instances save 30-60% over On-Demand. Review your RI coverage monthly and adjust as usage patterns change.
+
+### 6. Audit data transfer costs
+
+Data transfer is the hidden AWS tax. Review your bill for:
+- Cross-region data transfer (move services to the same region)
+- NAT Gateway charges (they add up fast in VPC-heavy architectures)
+- CloudFront vs direct S3 access for static assets
+
+### 7. Set up billing alerts
+
+This should be step one, but most teams skip it. Set alerts at 50%, 80%, and 100% of your expected monthly spend. Better yet, set up anomaly detection in AWS Cost Explorer.
+
+## Automate what you can
+
+Manual checklists are a starting point, but the real wins come from automation:
+
+- **Terraform** for infrastructure — review cost impact in PR diffs
+- **Infracost** to estimate cost changes before they ship
+- **AWS Cost Anomaly Detection** for unexpected spikes
+- **Scheduled Lambda functions** to shut down dev/staging resources outside business hours
+
+## The cultural shift
+
+The most effective cost optimization isn't technical — it's cultural. When every team can see their own spend in a dashboard, behavior changes organically. Engineers start thinking about cost as a design constraint, not an afterthought.
+
+Give every team visibility. Set budgets. Review monthly. That's it.

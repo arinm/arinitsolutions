@@ -1,0 +1,76 @@
+---
+title: "LLM Copilots Done Right: When AI Automation Helps (and When It Hurts)"
+excerpt: "Everyone's shipping an AI copilot. Most of them make the product worse. Here's our framework for evaluating whether an LLM integration will actually improve your users' workflow."
+category: "ai-llm"
+author:
+  name: "Adrian Ionescu"
+  role: "Founder & Lead Engineer"
+publishedAt: "2026-02-01"
+readingTime: 7
+featured: false
+---
+
+## The copilot gold rush
+
+Every product roadmap in 2026 has "add AI" somewhere on it. Most of these initiatives will fail — not because the technology doesn't work, but because teams are adding LLMs where they don't belong.
+
+We've built LLM integrations for several clients. Some delivered measurable value. Others were quietly rolled back after users complained about latency, hallucinations, or just getting in the way. Here's what we've learned.
+
+## When LLM copilots work
+
+LLMs add genuine value when three conditions are met:
+
+**1. The task is high-frequency and low-stakes.** Drafting email responses, summarizing long documents, suggesting code completions — these are perfect LLM use cases. Users do them repeatedly, the cost of a wrong answer is low, and a 70% accurate suggestion still saves time.
+
+**2. The user can quickly evaluate the output.** If your user needs to spend as long checking the AI's work as doing it themselves, you've added complexity without value. Good copilot UIs make it trivial to accept, reject, or edit suggestions.
+
+**3. You have a clear quality baseline.** If you can't measure whether the AI is helping, you can't improve it. Define success metrics before you build: task completion time, error rate, user satisfaction.
+
+## When LLM copilots hurt
+
+We've seen teams damage their products by adding AI in these scenarios:
+
+**High-stakes decisions without human review.** Never let an LLM make financial, medical, or legal decisions autonomously. Always human-in-the-loop.
+
+**Replacing search with generation.** If your users need accurate, specific information (product specs, documentation, compliance rules), a hallucinating LLM is worse than a good search bar. RAG helps, but it doesn't eliminate hallucinations.
+
+**Adding latency to fast workflows.** If your current UX handles a task in 200ms and your LLM call takes 2 seconds, you've made the experience worse even if the AI output is good.
+
+## Our evaluation framework
+
+Before we build an LLM feature for a client, we run it through four questions:
+
+1. **Is this task high-frequency enough to justify the investment?** If users do it once a month, the ROI probably isn't there.
+
+2. **Can users evaluate AI output faster than creating it themselves?** If not, the copilot adds friction, not efficiency.
+
+3. **What happens when the AI is wrong?** If the failure mode is annoying, maybe okay. If it's dangerous or costly, reconsider.
+
+4. **Can we measure success?** Define the metric (time saved, error reduction, satisfaction) before writing any code.
+
+## Implementation principles
+
+When we do build LLM features, we follow these principles:
+
+- **Stream responses** — perceived latency matters more than actual latency
+- **Show confidence signals** — let users know when the AI is uncertain
+- **Make editing effortless** — inline editing of AI suggestions, not accept/reject binary
+- **Instrument everything** — log prompts, responses, user actions, and outcomes
+- **Build an eval pipeline** — automated quality checks that run on every model update
+- **Offer an off switch** — users should always be able to disable AI features
+
+## The technology layer
+
+For most copilot use cases, you don't need to train a model. You need good prompt engineering and retrieval:
+
+- **RAG (Retrieval-Augmented Generation)** for domain-specific knowledge
+- **Prompt engineering** with structured outputs (JSON mode, function calling)
+- **Evaluation frameworks** to catch quality regressions
+- **Caching** for repeated queries to reduce cost and latency
+- **Fallback paths** for when the LLM is unavailable or slow
+
+## The bottom line
+
+AI copilots are a tool, not a strategy. The teams that ship useful AI features are the ones that start with the user problem, evaluate honestly whether an LLM is the right solution, and measure rigorously after launch.
+
+Don't add AI because your competitors are. Add it because you've found a specific workflow where it measurably helps your users.

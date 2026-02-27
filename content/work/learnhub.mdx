@@ -1,0 +1,83 @@
+---
+title: "EdTech Platform Rebuild"
+client: "EdTech"
+excerpt: "Rebuilt a legacy PHP learning platform into a modern Next.js + tRPC stack. Page load 5× faster, 40% increase in course completion rates."
+discipline: "web"
+tags: ["Next.js", "tRPC", "TypeScript", "PostgreSQL", "Stripe", "AWS"]
+featured: false
+metrics:
+  - value: "5×"
+    label: "Faster page loads"
+    context: "From 3.8s to 0.7s"
+  - value: "+40%"
+    label: "Course completion"
+    context: "Within 90 days"
+  - value: "25k"
+    label: "Active students"
+    context: "Post-migration"
+  - value: "11 weeks"
+    label: "Full migration"
+    context: "Including data"
+stack:
+  - category: "Frontend"
+    technologies: ["Next.js 14", "React 18", "TypeScript", "Tailwind CSS", "Radix UI"]
+  - category: "Backend"
+    technologies: ["tRPC", "Prisma", "PostgreSQL", "Redis", "Stripe", "Mux Video"]
+  - category: "Infrastructure"
+    technologies: ["AWS ECS", "CloudFront", "RDS", "S3", "GitHub Actions"]
+timeline:
+  - label: "Audit & Planning"
+    duration: "Week 1-2"
+    description: "Audited legacy PHP codebase, mapped 80+ pages, planned data migration."
+  - label: "Core Platform"
+    duration: "Week 3-6"
+    description: "Auth, course catalog, video player, progress tracking, student dashboard."
+  - label: "Payments & Admin"
+    duration: "Week 7-8"
+    description: "Stripe subscriptions, instructor dashboard, content management."
+  - label: "Data Migration"
+    duration: "Week 9-10"
+    description: "Migrated 25k users, 500+ courses, enrollment history. Zero data loss."
+  - label: "Launch"
+    duration: "Week 11"
+    description: "DNS cutover, monitoring setup, legacy redirect mapping."
+testimonial:
+  quote: "Our old platform felt like a chore. Students now actually finish courses — completion rates jumped 40%. The performance improvement alone was worth the investment."
+  author: "CEO"
+  role: "EdTech Platform"
+learnings:
+  - title: "tRPC eliminated an entire category of bugs"
+    body: "End-to-end type safety from database to UI meant we caught data shape mismatches at compile time, not in production. Our post-launch bug count was 60% lower than the old platform."
+  - title: "Video streaming optimization was the UX differentiator"
+    body: "We switched from self-hosted video to Mux with adaptive bitrate streaming. Buffering complaints dropped to near zero, and the native-feeling player (with resume, speed control, chapters) made students actually want to use the platform."
+---
+
+## The challenge
+
+The client's online learning platform was built on a legacy PHP/jQuery stack from 2016. Page loads averaged 3.8 seconds, the video player buffered constantly, and the admin panel was so slow that instructors dreaded uploading content. Course completion rates had flatlined at 35% — students were abandoning courses not because of content quality, but because the platform was painful to use.
+
+They had 25,000 active students and 500+ courses. A rewrite needed to migrate all existing data, maintain Stripe subscription continuity, and redirect every existing URL to prevent SEO loss.
+
+## Our approach
+
+We chose **Next.js with tRPC** for end-to-end type safety — from database schema (Prisma) through API layer (tRPC) to frontend (React). This eliminated an entire category of data-shape bugs that plagued the old PHP/REST approach.
+
+Video streaming moved from self-hosted MP4 files to **Mux** with adaptive bitrate, reducing buffering by 95%. We designed a custom video player with resume-from-where-you-left-off, speed control, and chapter markers.
+
+Key technical decisions:
+
+- **tRPC** for type-safe API (no code generation, no schema files — just TypeScript)
+- **Mux** for video hosting and adaptive bitrate streaming
+- **Chose NOT to do a gradual migration** — the PHP codebase was too tightly coupled. Clean-room rebuild with parallel running.
+- **Prisma** for type-safe database access with migration tooling
+
+## What we built
+
+A modern learning platform serving 25k+ students with dramatically better UX:
+
+- Course catalog with instant search, filtering, and SSR for SEO
+- Custom video player with adaptive streaming, chapters, and progress tracking
+- Student dashboard with learning streaks, progress analytics, and certificates
+- Instructor CMS for course creation, analytics, and student management
+- Stripe subscription management with plan upgrades, cancellations, and invoicing
+- Full data migration: 25k users, 500+ courses, 150k+ enrollment records

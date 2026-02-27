@@ -1,0 +1,79 @@
+---
+title: "GraphQL API Migration"
+client: "FinTech"
+excerpt: "Migrated a REST monolith to a federated GraphQL API. Reduced frontend data fetching by 73% and cut API response times in half."
+discipline: "web"
+tags: ["GraphQL", "Apollo Server", "Apollo Federation", "Node.js", "TypeScript"]
+featured: false
+metrics:
+  - value: "-73%"
+    label: "Data over-fetching"
+    context: "Payload size reduction"
+  - value: "2×"
+    label: "Faster responses"
+    context: "P95 latency halved"
+  - value: "4 teams"
+    label: "Independent deploys"
+    context: "Via federation"
+  - value: "12 weeks"
+    label: "Full migration"
+    context: "Zero downtime"
+stack:
+  - category: "API Layer"
+    technologies: ["Apollo Server", "Apollo Federation v2", "GraphQL", "TypeScript", "DataLoader"]
+  - category: "Backend"
+    technologies: ["Node.js", "PostgreSQL", "Redis", "RabbitMQ"]
+  - category: "Tooling"
+    technologies: ["Apollo Studio", "GraphQL Codegen", "Jest", "k6", "GitHub Actions"]
+timeline:
+  - label: "API Audit"
+    duration: "Week 1-2"
+    description: "Mapped 120+ REST endpoints, identified consumption patterns and waste."
+  - label: "Schema Design"
+    duration: "Week 3-4"
+    description: "Designed federated schema across 4 subgraphs (Users, Payments, Invoices, Analytics)."
+  - label: "Subgraph Build"
+    duration: "Week 5-9"
+    description: "Built subgraphs with DataLoader batching, caching, and auth directives."
+  - label: "Frontend Migration"
+    duration: "Week 10-11"
+    description: "Replaced REST calls with typed GraphQL queries using codegen."
+  - label: "Cutover"
+    duration: "Week 12"
+    description: "Shadow traffic testing, gradual migration, REST deprecation plan."
+learnings:
+  - title: "DataLoader solved the N+1 problem that GraphQL introduced"
+    body: "Without DataLoader, our resolver chain produced 40+ database queries per request. With batching, the same request made 4 queries. This was the single biggest performance win."
+  - title: "Apollo Federation let teams move independently"
+    body: "Before federation, API changes required cross-team coordination. Now each team owns their subgraph and deploys independently. Schema checks in CI catch breaking changes before merge."
+---
+
+## The challenge
+
+The client's fintech platform had a REST API with 120+ endpoints serving 3 frontend clients (web dashboard, mobile app, partner portal). Each client needed different data shapes, leading to massive over-fetching — the mobile app was downloading 4× the data it actually used. Adding new fields required backend changes, creating a bottleneck between frontend and backend teams.
+
+Four engineering teams shared one monolithic API. Any change risked breaking other teams' integrations. Deploy frequency had dropped to once per week due to coordination overhead.
+
+## Our approach
+
+We designed a **federated GraphQL architecture** with Apollo Federation v2. Instead of one massive schema, we split into 4 domain-specific subgraphs — Users, Payments, Invoices, and Analytics — each owned by one team. The Apollo Gateway composes them into a unified graph at runtime.
+
+We ran the migration incrementally: REST and GraphQL ran side-by-side for 4 weeks. Shadow traffic testing caught 12 edge cases before full cutover. Frontend teams migrated their data layer using GraphQL Codegen for type-safe queries.
+
+Key technical decisions:
+
+- **Apollo Federation v2** for team autonomy and independent deployments
+- **DataLoader** for batching and deduplication (solved N+1 query issues)
+- **Chose NOT to use schema stitching** — federation's ownership model was better for their team structure
+- **Redis query caching** at the gateway level for frequently accessed data
+
+## What we built
+
+A production federated GraphQL API serving 3 client applications:
+
+- 4 independently deployable subgraphs with schema composition checks in CI
+- Type-safe client SDKs auto-generated from the schema
+- Query response caching reducing database load by 45%
+- DataLoader batching eliminating N+1 queries across all resolvers
+- Apollo Studio for query analytics, deprecation tracking, and schema changelog
+- Comprehensive migration guide and REST deprecation timeline
