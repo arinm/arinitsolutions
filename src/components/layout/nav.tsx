@@ -55,7 +55,7 @@ export function Nav() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 transition-all",
+          "fixed top-0 left-0 right-0 transition-[padding]",
           mobileOpen ? "z-[400]" : "z-[200]",
           scrolled ? "px-4 sm:px-6 lg:px-8" : "px-0"
         )}
@@ -63,7 +63,7 @@ export function Nav() {
       >
         <div
           className={cn(
-            "mx-auto flex items-center justify-between border transition-all",
+            "mx-auto flex items-center justify-between border transition-[margin,max-width,height,padding,border-radius,background-color,border-color,box-shadow]",
             scrolled
               ? "mt-3 max-w-[1200px] h-14 px-6 rounded-full bg-neutral-950/70 backdrop-blur-xl border-neutral-700/40 shadow-lg shadow-black/20"
               : "mt-0 max-w-full h-16 px-8 lg:px-10 rounded-none bg-neutral-950/40 backdrop-blur-md border-transparent border-b-neutral-700/20"
