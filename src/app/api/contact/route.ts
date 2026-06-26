@@ -84,7 +84,10 @@ export async function POST(request: NextRequest) {
 
     const { error: emailError } = await getResend().emails.send({
       from: "Arinit Website <noreply@arinitsolutions.com>",
-      to: "arin@arinitsolutions.com",
+      // arin@arinitsolutions.com has no inbox (domain receiving is disabled in
+      // Resend), so mail to it bounces and then gets suppressed → silent drops.
+      // Send to a real, deliverable mailbox instead.
+      to: process.env.CONTACT_TO_EMAIL || "arin.mandroc@gmail.com",
       replyTo: data.email,
       subject: `New inquiry from ${data.name} — ${serviceLabels[data.service] || data.service}`,
       html: `
